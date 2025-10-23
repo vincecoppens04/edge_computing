@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqtt-subscriber
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mqtt-subscriber
+  template:
+    metadata:
+      labels:
+        app: mqtt-subscriber
+    spec:
+      containers:
+      - name: subscriber
+        image: edgecloud-subscriber:latest
+        imagePullPolicy: Never
+        env:
+        - name: MQTT_BROKER
+          value: "host.k3d.internal"   # This resolves to your Mac host inside K3d
+        - name: MQTT_PORT
+          value: "1884"
