@@ -18,6 +18,6 @@ spec:
         imagePullPolicy: Never
         env:
         - name: MQTT_BROKER
-          value: "host.k3d.internal"   # This resolves to your Mac host inside K3d
+          value: host.docker.internal
         - name: MQTT_PORT
           value: "1884"
