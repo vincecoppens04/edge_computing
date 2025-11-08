@@ -20,9 +20,9 @@ def generate_sensor_values():
     if random.random() < 0.08:
         if random.random() < 0.5:
             sensor2 += random.uniform(2, 3)   # spike
-
         else:
             sensor2 -= random.uniform(2, 3)   # sudden drop
+    return sensor1, sensor2
 
 while True:
     sensor1, sensor2 = generate_sensor_values()
