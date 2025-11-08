@@ -1,0 +1,25 @@
+{
+  "latex-workshop.latex.cwd": "${workspaceFolder}/latex",
+  "latex-workshop.latex.outDir": "${workspaceFolder}/latex/_build",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.view.pdf.ref.viewer": "tab",
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.recipe.default": "latexmk (pdfLaTeX)",
+  "latex-workshop.latex.recipes": [
+    { "name": "latexmk (pdfLaTeX)", "tools": ["latexmk"] }
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk",
+      "command": "latexmk",
+      "args": [
+        "-pdf",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "Scription.tex"
+      ],
+      "env": { "PATH": "/Library/TeX/texbin:${env:PATH}" }
+    }
+  ],
+  "files.watcherExclude": { "**/_build/**": true }
+}

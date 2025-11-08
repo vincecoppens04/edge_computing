@@ -1,0 +1,207 @@
+\documentclass[10.5pt,a4paper,oneside]{report}
+
+% =====================================================
+% ENCODING & FONT
+% =====================================================
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\frenchspacing
+
+% =====================================================
+% LANGUAGE
+% =====================================================
+\usepackage[british]{babel}
+
+% =====================================================
+% PAGE LAYOUT
+% =====================================================
+\usepackage[a4paper,left=20mm,right=20mm,top=25mm,bottom=25mm,includefoot]{geometry}
+\setlength{\parindent}{0pt}                     % No paragraph indentation
+\setlength{\parskip}{6pt plus 1pt minus 1pt}    % Blank line between paragraphs
+\raggedbottom
+
+% =====================================================
+% LINE SPACING
+% =====================================================
+\usepackage{setspace}
+\setstretch{1.05}
+
+% =====================================================
+% GRAPHICS & FLOATS
+% =====================================================
+\usepackage{graphicx}
+\graphicspath{{figuren/}{figures/}}
+\usepackage{float}
+\usepackage{flafter}
+\usepackage{longtable}
+\usepackage{pdfpages}
+
+% =====================================================
+% COLOURS (for listings)
+% =====================================================
+\usepackage{xcolor}
+
+% =====================================================
+% CAPTIONS
+% =====================================================
+\usepackage[font=small,labelfont=bf]{caption}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{2pt}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}
+
+% =====================================================
+% LISTINGS (UTF-8 safe + wrapping)
+% =====================================================
+\usepackage{listings}
+\usepackage{listingsutf8}
+\lstset{inputencoding=utf8}
+\lstset{
+  literate=
+    {é}{{\'e}}1
+    {–}{{--}}1
+    {—}{{---}}1
+    {→}{{$\rightarrow$}}1
+    {°}{{$^\circ$}}1
+    {…}{{\ldots}}1
+    {’}{{'}}1
+    {‘}{{`}}1
+    {“}{{``}}1
+    {”}{{''}}1
+    {€}{{\euro}}1
+    {⚠️}{{[WARN]}}1
+    {✅}{{[OK]}}1
+}
+\lstdefinestyle{tightplain}{%
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  numbers=left,
+  numbersep=6pt,
+  frame=single,
+  aboveskip=6pt, belowskip=6pt,
+  breaklines=true,
+  breakatwhitespace=true,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space}
+}
+\lstset{style=tightplain}
+\lstdefinelanguage{YAML}{%
+  keywords={true,false,null,y,n},
+  keywordstyle=\ttfamily,
+  basicstyle=\ttfamily\small,
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[l]{\#},
+  morestring=[b]',
+  morestring=[b]"
+}
+\lstdefinelanguage{Dockerfile}{%
+  keywords={FROM,AS,RUN,CMD,ENV,ARG,ADD,COPY,ENTRYPOINT,EXPOSE,USER,WORKDIR,ONBUILD,STOPSIGNAL,HEALTHCHECK,SHELL,LABEL,VOLUME},
+  keywordstyle=\ttfamily,
+  comment=[l]{\#},
+  morecomment=[l]{\#},
+  morestring=[b]",
+  morestring=[b]',
+  basicstyle=\ttfamily\small
+}
+\renewcommand\lstlistingname{Listing}
+\renewcommand\lstlistlistingname{List of Listings}
+
+% =====================================================
+% SYMBOLS
+% =====================================================
+\usepackage{textcomp}
+
+% =====================================================
+% HEADERS / FOOTERS
+% =====================================================
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Edge Computing}
+\rhead{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{12pt}
+
+% =====================================================
+% HYPERLINKS
+% =====================================================
+\usepackage[hidelinks]{hyperref}
+
+% =====================================================
+% BIBLIOGRAPHY (biblatex with full footnotes + URLs)
+% =====================================================
+\usepackage{csquotes} % recommended for biblatex
+\usepackage[backend=biber,style=ieee,url=true,doi=false,isbn=false]{biblatex}
+\addbibresource{bibliodatabase.bib}
+% Put URLs in monospace and make them clickable/printable
+\DeclareFieldFormat{url}{\url{#1}}
+% Put the bibliography into the ToC
+\defbibheading{bibintoc}[\bibname]{\section*{#1}\addcontentsline{toc}{section}{#1}}
+
+% =====================================================
+% MACROS
+% =====================================================
+\newcommand{\npar}{\par \vspace{1.2ex plus 0.3ex minus 0.3ex}\noindent}
+\newcommand{\command}[1]{\lstinline[basicstyle=\ttfamily]{#1}}
+
+% =====================================================
+% DOCUMENT START
+% =====================================================
+\begin{document}
+
+% -----------------------------------------------------
+% TITLE PAGE
+% -----------------------------------------------------
+\input{title}
+\thispagestyle{empty}
+\clearpage
+
+% -----------------------------------------------------
+% FRONT MATTER
+% -----------------------------------------------------
+\pagenumbering{roman}
+\tableofcontents
+\listoffigures
+% \listoftables
+% \lstlistoflistings
+\clearpage
+
+% -----------------------------------------------------
+% MAIN CHAPTER
+% -----------------------------------------------------
+\pagenumbering{arabic}
+
+\chapter{Implementation of an \emph{edge--cloud} architecture: experimental setup and technologies}
+\input{experiment}
+
+% -----------------------------------------------------
+% BIBLIOGRAPHY (with URLs visible & clickable)
+% -----------------------------------------------------
+\printbibliography[heading=bibintoc,title=Bibliography]
+
+% -----------------------------------------------------
+% APPENDICES  (only Scription adds \chapter{...})
+% -----------------------------------------------------
+\appendix
+
+\chapter{Python subscriber and publisher}
+\label{app:python}
+\input{appendix_python_scripts}      % <-- file must NOT contain \chapter
+
+\chapter{Container image and Kubernetes manifest}
+\label{app:container_k8s}
+\input{appendix_container_and_k8s}   % <-- file must NOT contain \chapter
+
+\chapter{Build and run instructions}
+\label{app:buildrun}
+\input{appendix_build_and_run}       % <-- file must NOT contain \chapter
+
+\chapter{Architectural overview diagram}\label{app:architecture}
+\input{appendix_architecture_overview} % <-- file must NOT contain \chapter
+
+% -----------------------------------------------------
+\end{document}

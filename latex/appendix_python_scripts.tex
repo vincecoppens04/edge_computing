@@ -1,0 +1,20 @@
+% Appendix A content only — no \chapter here
+
+This appendix contains the edge subscriber and the Raspberry Pi publisher used in the experiment.
+
+\section{Mac subscriber (\texttt{mac\_subscriber.py})}
+\lstinputlisting[
+  language=Python,
+  inputencoding=utf8,
+  caption={Mac subscriber with Isolation Forest anomaly detection and AWS IoT Core publishing},
+  label={lst:mac_subscriber}]
+{edge_computing/mac_subscriber.py}
+
+\section{Pi publisher (\texttt{pi\_publisher.py})}
+% If this file is not saved as UTF-8 on Overleaf, latin1 avoids “Invalid UTF-8 byte sequence” errors.
+\lstinputlisting[
+  language=Python,
+  inputencoding=latin1,
+  caption={Raspberry Pi publisher generating \texttt{sensor1} and \texttt{sensor2} with occasional outliers},
+  label={lst:pi_publisher}]
+{edge_computing/pi_publisher.py}
