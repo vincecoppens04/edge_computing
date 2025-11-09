@@ -1,0 +1,25 @@
+% Appendix C content only — no \chapter here
+
+This appendix summarises how to build the container image, load it into the local cluster, and deploy the subscriber.
+
+\section{Build the image locally}
+\begin{lstlisting}[language=bash,caption={Build the subscriber image}]
+cd edge_computing
+docker build -t edgecloud-subscriber:latest .
+\end{lstlisting}
+
+\section{Run in a local Kubernetes cluster}
+If you use Docker Desktop, the local image is available to the cluster automatically. For a kind cluster:
+\begin{lstlisting}[language=bash,caption={Load image into a kind cluster (if used)}]
+kind load docker-image edgecloud-subscriber:latest
+\end{lstlisting}
+
+Deploy the subscriber:
+\begin{lstlisting}[language=bash,caption={Deploy the MQTT subscriber}]
+kubectl apply -f edge_computing/subscriber-deployment.yaml
+kubectl get pods -l app=mqtt-subscriber
+kubectl logs -f deploy/mqtt-subscriber
+\end{lstlisting}
+
+\section{Certificates and environment}
+The subscriber publishes results to AWS IoT Core using certificates located under \texttt{edge\_computing/aws\_certs/}. Do not commit real keys or certificates to the repository.

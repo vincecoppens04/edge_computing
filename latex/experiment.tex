@@ -1,0 +1,105 @@
+% experiment.tex
+\section{Experiment overview and architecture}
+
+The goal of this experiment is to design and implement a functional prototype that demonstrates how an edge–cloud architecture can combine local intelligence with centralized cloud coordination. The prototype illustrates how modern container and orchestration technologies can be used to process data close to its source while maintaining integration with cloud services. At least, that was the theoretical goal; as will be shown later, the actual implementation differs slightly from this plan.
+
+The setup follows a three-layer model that mirrors a typical edge-to-cloud continuum.  
+At the device layer, a Raspberry Pi acts as an IoT endpoint that generates and publishes sensor data. It represents the multitude of field devices producing information near the physical environment.  
+
+The edge cloud layer, hosted on a MacBook, provides the intermediate computing environment where data is processed before being sent to the cloud. Inside this layer, lightweight containers run within a K3D Kubernetes cluster, forming a small-scale edge cloud capable of orchestrating local services.  
+
+The cloud layer, implemented through AWS IoT Core, serves as the data endpoint. Communication between these layers is handled via the MQTT protocol.  
+
+A complete architectural visualisation of the experiment is provided in Appendix~\ref{app:architecture}. In the following sections, each layer and its components are discussed in detail.
+
+\section{Device layer — Raspberry Pi}
+
+The device layer represents the physical interface between the digital architecture and its surrounding environment. In this experiment, it is implemented by a single Raspberry Pi running Raspbian Stretch (2017), which acts as a simulated IoT endpoint. The device continuously generates and publishes sensor data to the edge cloud layer using the MQTT protocol,\footnote{\bibentry{mqtt-org}.} (Figure~\ref{fig:pi-publisher}; Appendix~\ref{app:python}).  
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/experiment1.png}
+  \caption{Python script \texttt{pi\_publisher.py} running on the Raspberry Pi and broadcasting live JSON-formatted sensor data on the MQTT network.}
+  \label{fig:pi-publisher}
+\end{figure}
+
+The Python publisher emulates two physical sensors:  
+\begin{itemize}
+    \item \textbf{Sensor 1} — temperature-like readings fluctuating around 20 °C.
+    \item \textbf{Sensor 2} — vibration-like readings with a baseline of approximately 0.5 g.
+\end{itemize}
+
+To simulate irregularities typically found in industrial or environmental signals, around 8 \% of the values are replaced by random spikes or drops. Each message, containing both sensor values and a timestamp, is encoded as JSON and published once per second to the MQTT topic \texttt{sensor/data} on port 1884 of the broker running in the edge-cloud environment.  
+
+Although the initial plan was to analyse both simulated sensors, the final experiment used only the vibration signal (sensor 2) as input for the anomaly detection model on the edge cloud. This adjustment does not diminish the experiment’s purpose, as the single-sensor setup still demonstrates the complete functionality of the edge–cloud pipeline — from data generation and local preprocessing to cloud transmission and monitoring.  
+
+The Raspberry Pi’s function is therefore limited to data publication. It does not host a KubeEdge EdgeCore component, because its operating-system version lacked compatibility with recent releases.\footnote{\bibentry{xiong-2018-kubeedge}.} Nevertheless, the architecture remains KubeEdge-ready for future extensions in which the Pi — or other IoT devices — could be managed directly by the local Kubernetes cluster through KubeEdge.  
+
+This setup, its configuration, and the overall experimental workflow were iteratively refined with the support of generative AI tools,\footnote{\bibentry{openai-gemini-2025}.} including ChatGPT and Gemini, which provided interactive feedback and troubleshooting assistance during implementation.
+
+
+
+\section{Edge cloud layer — MacBook (Docker, Kubernetes, K3D, KubeEdge, and anomaly detection)}
+
+The edge cloud layer, hosted on a MacBook running macOS, forms the computational centre of the prototype. It combines local orchestration and lightweight artificial intelligence within a small-scale container infrastructure. This layer demonstrates how several cloud-native technologies — Docker Desktop,\footnote{\bibentry{docker-desktop}.} K3D,\footnote{\bibentry{k3d-site}.} K3s,\footnote{\bibentry{yakubovov-2025-lightweight-k8s}.} and Kubernetes\footnote{\bibentry{datacamp-k8s}.} — can work together to manage and execute applications directly at the network edge (Figure~\ref{fig:build-deploy}; Appendix~\ref{app:buildrun}).  
+
+Docker Desktop acts as the foundation of the edge cloud. Because macOS cannot run Linux containers natively, Docker first creates a small Linux virtual machine that provides the environment required for containers to operate.\footnote{\bibentry{collabnix-dd}.} Inside this environment, K3D runs a compact version of Kubernetes (called K3s) entirely within Docker containers. In other words, K3D uses Docker to “host” a Kubernetes cluster locally on the laptop. Within this cluster, one container acts as the control plane — the central brain of Kubernetes, which decides what should run where — and another acts as the worker node, the environment in which the actual applications are executed. On top of this layer, Kubernetes performs the orchestration tasks: it deploys containers, monitors their health, restarts them if they fail, and manages internal networking and configuration. Finally, KubeEdge extends the Kubernetes model to the physical edge by allowing real devices, such as the Raspberry Pi, to connect as managed nodes.  
+
+In this experiment, only the CloudCore part of KubeEdge was installed on the MacBook, ensuring compatibility with future extensions, while the Pi did not run the EdgeCore agent due to OS limitations. Together, these components form a layered hierarchy: macOS provides the host system, Docker runs Linux containers, K3D builds the local Kubernetes cluster inside Docker, Kubernetes orchestrates everything, and KubeEdge acts as a bridge to potential edge devices.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\textwidth]{figures/experiment2.png}
+  \caption{MacBook terminal during cluster setup and deployment of the subscriber container. The procedure illustrated here corresponds to the steps described in Appendix~\ref{app:buildrun} (Build and run instructions).}
+  \label{fig:build-deploy}
+\end{figure}
+
+The first part of the output illustrates the process of building the Docker image from the local Dockerfile, followed by its import into the K3D cluster (\texttt{k3d image import edgecloud-subscriber:latest -c edgecloud}). The subsequent lines confirm that the image is distributed across both the Kubernetes server and agent nodes. After that, the command \texttt{kubectl apply -f subscriber-deployment.yaml} instructs Kubernetes to start the subscriber pod defined in the YAML configuration. Once the pod is running, the log output shows continuous MQTT messages being received and processed. Each line represents one JSON message received from the Raspberry Pi through the local MQTT broker and analysed for anomalies (Figure~\ref{fig:subscriber-output}).  
+
+All source files of this layer — the \texttt{mac\_subscriber.py} script, \texttt{Dockerfile}, and \texttt{subscriber-deployment.yaml} — are provided in Appendices~\ref{app:python} and~\ref{app:container_k8s}. The Dockerfile defines how the container image is built (base image, dependencies, copy of the script), while the YAML file specifies how Kubernetes should deploy the image, set environment variables (e.g.\ broker IP, port, MQTT topic, and AWS endpoint), and automatically restart the pod if needed.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/experiment3.png}
+  \caption{Real-time output of the running subscriber container on the MacBook. Each line confirms receipt and anomaly classification of one MQTT message before publication to AWS IoT Core.}
+  \label{fig:subscriber-output}
+\end{figure}
+
+The \texttt{mac\_subscriber.py} script executes two main tasks within the container: (1) MQTT data ingestion and (2) anomaly detection using an Isolation Forest model\footnote{\bibentry{sklearn-isoforest}.} from scikit-learn. The script subscribes to the topic \texttt{sensor/data}, extracts the vibration signal (\texttt{sensor2}) from each message, and buffers the latest 100 samples in memory. After every 20 new samples, the Isolation Forest is retrained on the current buffer to adapt to potential slow drifts in the signal. For each incoming value, the model computes an anomaly score based on how isolated that data point is within a randomly constructed forest of decision trees. If the score exceeds a threshold, the reading is classified as an outlier (\texttt{"anomaly": true}); otherwise it is marked as normal. This allows the model to operate in a sliding-window fashion rather than static batches, meaning it continuously learns from the most recent data instead of relying on fixed training sets. The approach is lightweight and suitable for limited computing resources typical at the edge.
+
+Once the classification result is determined, the container republishes the enriched JSON message — including timestamp, \texttt{sensor2} value, and anomaly flag — to AWS IoT Core\footnote{\bibentry{aws-iot-what}.} over an encrypted MQTT/TLS connection using the device certificates stored inside the container. This completes the local processing pipeline: raw sensor data are ingested, analysed, and securely transmitted to the cloud within the same edge node.
+
+Originally, the plan was to publish aggregated results to the cloud only periodically, for example after every 100 analysed samples, to further reduce data-transmission frequency and make the pipeline more representative of edge–cloud behaviour. However, due to time constraints during testing and the need to repeatedly rebuild and redeploy the system, this optimisation was not implemented. It could easily be added later with a few extra lines of code in the subscriber loop, without requiring any architectural changes. Although the current implementation sends messages more frequently, it still demonstrates the full interaction between local inference and cloud communication within the designed edge–cloud infrastructure.
+
+For readers who want the service-level internals of AWS IoT and an academic perspective on edge/cloud coupling, see the official “How it works” overview\footnote{\bibentry{aws-iot-how}.} and a recent analysis of AWS edge options.\footnote{\bibentry{borra-aws-edge}.}
+
+
+
+\section{Cloud layer — AWS IoT Core}
+
+The cloud layer completes the edge–cloud architecture by providing a secure and scalable environment for data collection, monitoring, and potential post-processing. In this experiment, the cloud layer is implemented through AWS IoT Core, a managed service that enables IoT devices and edge nodes to communicate reliably with the cloud using the MQTT protocol\footnote{\bibentry{aws-what-is-mqtt}.} over TLS encryption.
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/experiment4.png}
+  \caption{AWS IoT Core console showing a live subscription to the topic \texttt{edgecloud/alerts}. Each message originates from the edge-cloud subscriber container and represents a vibration reading enriched with its anomaly classification.}
+  \label{fig:aws-iot}
+\end{figure}
+
+The setup of this layer began by registering a new IoT device, or *Thing*, named \texttt{EdgeCloudAWS} in the AWS IoT Core management console. During registration, AWS automatically generated the required security credentials, including a device certificate, a private key, and the \texttt{AmazonRootCA1.pem} file for authentication. These three files were downloaded and mounted into the subscriber container on the MacBook, ensuring that all messages published to the AWS endpoint were transmitted securely using mutual TLS encryption. The subscriber connected to the endpoint \texttt{akzdc7a60ugm9-ats.iot.eu-north-1.amazonaws.com} on port~8883, which is the default MQTT port for encrypted communication.
+
+Within AWS IoT Core, messages arriving at the topic \texttt{edgecloud/alerts} can be processed further through IoT Rules, which define automated actions such as forwarding messages to AWS Lambda, storing them in Amazon S3, or inserting them into a DynamoDB table. These integrations were conceptually explored during the design phase but were not implemented in the prototype, as the focus of the experiment was to demonstrate the successful connection between the local intelligence at the edge and the cloud service, not long-term data storage or analytics. The system architecture, however, fully supports such extensions without modification—only a few configuration steps in the AWS console would be required to enable them.
+
+Figure~\ref{fig:aws-iot} therefore illustrates the final step of the pipeline: each message published by the \texttt{mac\_subscriber.py} container is received almost instantly in the AWS IoT Core dashboard, proving the reliability of the MQTT/TLS connection and the validity of the device credentials. The message structure contains the timestamp, the measured vibration value, and the anomaly flag determined by the Isolation Forest model running at the edge. This confirms that inference and preprocessing occur locally, while the cloud remains responsible for central data management and potential integration with other AWS services.
+
+For broader Kubernetes architecture material and a literature overview complementary to the introductory source cited earlier, see a vendor architecture guide\footnote{\bibentry{opsramp-arch}.} and an additional overview article,\footnote{\bibentry{theodo-overview}.} as well as a multi-vocal review of Kubernetes research topics.\footnote{\bibentry{shamim-k8s-review}.}
+
+
+
+\section{Experiment conclusion}
+
+The experiment ultimately succeeded in producing a fully functional prototype of an edge–cloud system, despite the considerable challenges faced during its development. At the start, none of the tools or technologies — Docker, Kubernetes, or KubeEdge — were familiar. Building the system therefore became a process of exploration and persistence, relying heavily on generative AI as an interactive assistant. Many hours were spent resolving connection and configuration issues. For example, early in the setup, the Raspberry Pi could successfully ping the MacBook, confirming that both were on the same local network, yet MQTT messages were not arriving. After long troubleshooting sessions, it turned out that the broker was simply listening on the wrong port. Similarly, numerous Kubernetes error messages had to be understood and resolved one by one. Over time, more features were added, such as anomaly detection and the Isolation Forest model, followed by the creation of a Docker image and its integration with Kubernetes. In the end, everything was working together as intended. This process — entirely built through interaction between human reasoning and AI support — illustrates what true generative AI collaboration can look like in practice: problem-solving through conversation, iteration, and contextual reasoning, rather than copying existing solutions from the internet.
+
+The experiment demonstrates that it is feasible for a small team — or even an individual — to set up a complete edge–cloud architecture with KubeEdge, K3D, and AWS IoT Core, even when the edge hardware is outdated. The system successfully showed how local computation, container orchestration, and cloud connectivity can be integrated into one coherent pipeline. Although the Raspberry Pi’s older operating system prevented the deployment of KubeEdge’s EdgeCore, the setup was kept KubeEdge-compatible, allowing future expansion with minimal adjustments. This achievement highlights how complex, industry-level architectures are now accessible to students and researchers without extensive infrastructure or prior experience, provided that sufficient time and curiosity are invested in understanding the underlying mechanisms.
+
+Nevertheless, the resulting system also has limitations. Functionally, it does not yet represent the most efficient example of edge computing: the edge node still sends a continuous stream of data rather than aggregated or filtered results, and only a single simulated sensor is analysed. These simplifications were deliberate choices, prioritising architectural understanding over application complexity. For this experiment, the primary focus was the infrastructure — how the layers interact, deploy, and communicate securely — rather than the semantics of the data itself. The sensor readings were merely a tool to demonstrate functionality. Future work could expand this foundation by implementing true data reduction at the edge, managing multiple sensors, or deploying actual physical devices as managed KubeEdge nodes. Despite these open points, the experiment achieved its core goal: demonstrating, in a realistic and reproducible way, how modern edge–cloud architectures can be designed, deployed, and understood from scratch using open-source tools and the guidance of generative AI.

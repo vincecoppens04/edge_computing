@@ -1,0 +1,17 @@
+% Appendix B content only — no \chapter here
+
+This appendix lists the container image definition and the Kubernetes Deployment used to run the subscriber.
+
+\section{Dockerfile}
+\lstinputlisting[
+  language=Dockerfile,
+  caption={Dockerfile for the edgecloud-subscriber image},
+  label={lst:dockerfile}]
+{edge_computing/Dockerfile}
+
+\section{Kubernetes Deployment (\texttt{subscriber-deployment.yaml})}
+\lstinputlisting[
+  language=YAML,
+  caption={Deployment manifest for the MQTT subscriber pod},
+  label={lst:subscriber_deployment}]
+{edge_computing/subscriber-deployment.yaml}
