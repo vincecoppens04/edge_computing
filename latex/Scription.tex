@@ -9,6 +9,9 @@
 \usepackage{microtype}
 \frenchspacing
 
+% Allow including newer PDFs cleanly
+\pdfminorversion=7
+
 % =====================================================
 % LANGUAGE
 % =====================================================
@@ -18,8 +21,8 @@
 % PAGE LAYOUT
 % =====================================================
 \usepackage[a4paper,left=20mm,right=20mm,top=25mm,bottom=25mm,includefoot]{geometry}
-\setlength{\parindent}{0pt}                     % No paragraph indentation
-\setlength{\parskip}{6pt plus 1pt minus 1pt}    % Blank line between paragraphs
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 1pt minus 1pt}
 \raggedbottom
 
 % =====================================================
@@ -32,7 +35,8 @@
 % GRAPHICS & FLOATS
 % =====================================================
 \usepackage{graphicx}
-\graphicspath{{figuren/}{figures/}}
+% Make sure images are found whether built in-place or from a subdir
+\graphicspath{{figuren/}{figures/}{../figuren/}{../figures/}}
 \usepackage{float}
 \usepackage{flafter}
 \usepackage{longtable}
@@ -116,31 +120,16 @@
 \usepackage{textcomp}
 
 % =====================================================
-% HEADERS / FOOTERS
+% BIBLIOGRAPHY (BibTeX + IEEE-like)
 % =====================================================
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\fancyhf{}
-\lhead{Edge Computing}
-\rhead{\thepage}
-\renewcommand{\headrulewidth}{0.4pt}
-\setlength{\headheight}{12pt}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{bibentry}
 
 % =====================================================
-% HYPERLINKS
+% HYPERLINKS  (load AFTER cite/url)
 % =====================================================
 \usepackage[hidelinks]{hyperref}
-
-% =====================================================
-% BIBLIOGRAPHY (biblatex with full footnotes + URLs)
-% =====================================================
-\usepackage{csquotes} % recommended for biblatex
-\usepackage[backend=biber,style=ieee,url=true,doi=false,isbn=false]{biblatex}
-\addbibresource{bibliodatabase.bib}
-% Put URLs in monospace and make them clickable/printable
-\DeclareFieldFormat{url}{\url{#1}}
-% Put the bibliography into the ToC
-\defbibheading{bibintoc}[\bibname]{\section*{#1}\addcontentsline{toc}{section}{#1}}
 
 % =====================================================
 % MACROS
@@ -152,6 +141,9 @@
 % DOCUMENT START
 % =====================================================
 \begin{document}
+
+% (Keep your existing bib preload where we placed it earlier, after \pagenumbering{arabic}
+% and before the first \chapter — unchanged.)
 
 % -----------------------------------------------------
 % TITLE PAGE
@@ -168,40 +160,48 @@
 \listoffigures
 % \listoftables
 % \lstlistoflistings
-\clearpage
+% \newpage
 
 % -----------------------------------------------------
 % MAIN CHAPTER
 % -----------------------------------------------------
-\pagenumbering{arabic}
+
+% Preload bibliography entries for \bibentry footnotes
+\bibliographystyle{ieeetr}           % switch to IEEEtran once installed
+\nobibliography{bibliodatabase}
 
 \chapter{Implementation of an \emph{edge--cloud} architecture: experimental setup and technologies}
+\pagenumbering{arabic}
 \input{experiment}
 
 % -----------------------------------------------------
-% BIBLIOGRAPHY (with URLs visible & clickable)
+% BIBLIOGRAPHY
 % -----------------------------------------------------
-\printbibliography[heading=bibintoc,title=Bibliography]
+%\cleardoublepage
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{bibliodatabase}
+\pagenumbering{roman}
 
 % -----------------------------------------------------
-% APPENDICES  (only Scription adds \chapter{...})
+% APPENDICES
 % -----------------------------------------------------
 \appendix
 
 \chapter{Python subscriber and publisher}
 \label{app:python}
-\input{appendix_python_scripts}      % <-- file must NOT contain \chapter
+\input{appendix_python_scripts}
 
 \chapter{Container image and Kubernetes manifest}
 \label{app:container_k8s}
-\input{appendix_container_and_k8s}   % <-- file must NOT contain \chapter
+\input{appendix_container_and_k8s}
 
 \chapter{Build and run instructions}
 \label{app:buildrun}
-\input{appendix_build_and_run}       % <-- file must NOT contain \chapter
+\input{appendix_build_and_run}
 
-\chapter{Architectural overview diagram}\label{app:architecture}
-\input{appendix_architecture_overview} % <-- file must NOT contain \chapter
+\chapter{Architectural overview diagram}
+\label{app:architecture}
+\input{appendix_architecture_overview}
 
 % -----------------------------------------------------
 \end{document}

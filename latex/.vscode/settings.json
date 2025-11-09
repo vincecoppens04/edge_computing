@@ -16,7 +16,7 @@
         "-pdf",
         "-interaction=nonstopmode",
         "-file-line-error",
-        "Scription.tex"
+        "scription.tex"
       ],
       "env": { "PATH": "/Library/TeX/texbin:${env:PATH}" }
     }

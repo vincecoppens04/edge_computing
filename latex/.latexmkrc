@@ -1,6 +1,20 @@
-$out_dir = '_build';
+# =====================================================
+# latexmk configuration for BibTeX (no biber)
+# =====================================================
+
+# Keep all auxiliary/output files in _build
 $aux_dir = '_build';
+$out_dir = '_build';
+
+# Use BibTeX instead of biber
+$bibtex_use = 1;
+
+# LaTeX build commands
 $pdflatex = 'pdflatex -interaction=nonstopmode -file-line-error %O %S';
-$bibtex   = 'biber %O %B';
 $pdf_previewer = 'open';
-@generated_exts = qw(aux bbl bcf blg fdb_latexmk fls log out run.xml synctex.gz toc lof lot);
+
+# Clean-up extensions
+@generated_exts = qw(aux bbl blg fdb_latexmk fls log out synctex.gz toc lof lot);
+
+# No biber dependencies
+# (old biber lines removed entirely)
