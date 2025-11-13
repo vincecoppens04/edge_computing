@@ -35,7 +35,6 @@
 % GRAPHICS & FLOATS
 % =====================================================
 \usepackage{graphicx}
-% Make sure images are found whether built in-place or from a subdir
 \graphicspath{{figuren/}{figures/}{../figuren/}{../figures/}}
 \usepackage{float}
 \usepackage{flafter}
@@ -92,6 +91,7 @@
   postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space}
 }
 \lstset{style=tightplain}
+
 \lstdefinelanguage{YAML}{%
   keywords={true,false,null,y,n},
   keywordstyle=\ttfamily,
@@ -102,6 +102,7 @@
   morestring=[b]',
   morestring=[b]"
 }
+
 \lstdefinelanguage{Dockerfile}{%
   keywords={FROM,AS,RUN,CMD,ENV,ARG,ADD,COPY,ENTRYPOINT,EXPOSE,USER,WORKDIR,ONBUILD,STOPSIGNAL,HEALTHCHECK,SHELL,LABEL,VOLUME},
   keywordstyle=\ttfamily,
@@ -111,6 +112,7 @@
   morestring=[b]',
   basicstyle=\ttfamily\small
 }
+
 \renewcommand\lstlistingname{Listing}
 \renewcommand\lstlistlistingname{List of Listings}
 
@@ -132,6 +134,21 @@
 \usepackage[hidelinks]{hyperref}
 
 % =====================================================
+% COMPACT MAIN-CHAPTER STYLE (only for numbered content)
+% =====================================================
+\makeatletter
+\newcommand{\mainchapter}[1]{%
+  \par\vspace*{10pt}% small space from top of page / previous text
+  \refstepcounter{chapter}%
+  \setcounter{section}{0}% reset section numbering like \chapter does
+  \addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#1}%
+  {\parindent \z@ \raggedright \normalfont
+    \LARGE\bfseries \thechapter. #1\par\nobreak
+    \vskip 8pt}%
+}
+\makeatother
+
+% =====================================================
 % MACROS
 % =====================================================
 \newcommand{\npar}{\par \vspace{1.2ex plus 0.3ex minus 0.3ex}\noindent}
@@ -142,48 +159,56 @@
 % =====================================================
 \begin{document}
 
-% (Keep your existing bib preload where we placed it earlier, after \pagenumbering{arabic}
-% and before the first \chapter — unchanged.)
-
 % -----------------------------------------------------
 % TITLE PAGE
 % -----------------------------------------------------
 \input{title}
 \thispagestyle{empty}
-\clearpage
 
 % -----------------------------------------------------
-% FRONT MATTER
+% FRONT MATTER (roman numbering, normal layout)
 % -----------------------------------------------------
 \pagenumbering{roman}
 \tableofcontents
 \listoffigures
-% \listoftables
-% \lstlistoflistings
-% \newpage
 
 % -----------------------------------------------------
-% MAIN CHAPTER
+% PRELOAD BIBLIOGRAPHY ENTRIES FOR \bibentry
 % -----------------------------------------------------
-
-% Preload bibliography entries for \bibentry footnotes
-\bibliographystyle{ieeetr}           % switch to IEEEtran once installed
+\bibliographystyle{ieeetr}
 \nobibliography{bibliodatabase}
 
-\chapter{Implementation of an \emph{edge--cloud} architecture: experimental setup and technologies}
+% -----------------------------------------------------
+% MAIN CHAPTERS (arabic numbering, compact headings)
+% -----------------------------------------------------
+% -----------------------------------------------------
+% MAIN CHAPTERS (arabic numbering, compact headings)
+% -----------------------------------------------------
 \pagenumbering{arabic}
+
+% Pull the very first chapter up (tune value if needed)
+\vspace*{-4cm}
+\mainchapter{Foundations of Edge Computing}
+\input{theory}
+
+\mainchapter{Edge computing and AI: the emergence of Edge Cloud}
+\input{AI}
+
+\mainchapter{Comparison of key Edge Computing Frameworks}
+\input{frameworks}
+
+\mainchapter{Implementation of an \emph{edge--cloud} architecture: experimental setup and technologies}
 \input{experiment}
 
 % -----------------------------------------------------
-% BIBLIOGRAPHY
+% BIBLIOGRAPHY (normal report layout again)
 % -----------------------------------------------------
-%\cleardoublepage
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliography{bibliodatabase}
 \pagenumbering{roman}
 
 % -----------------------------------------------------
-% APPENDICES
+% APPENDICES (normal \chapter layout, can start on new pages)
 % -----------------------------------------------------
 \appendix
 
@@ -201,6 +226,7 @@
 
 \chapter{Architectural overview diagram}
 \label{app:architecture}
+\vspace{-3\baselineskip}
 \input{appendix_architecture_overview}
 
 % -----------------------------------------------------
