@@ -20,6 +20,3 @@ kubectl apply -f edge_computing/subscriber-deployment.yaml
 kubectl get pods -l app=mqtt-subscriber
 kubectl logs -f deploy/mqtt-subscriber
 \end{lstlisting}
-
-\section{Certificates and environment}
-The subscriber publishes results to AWS IoT Core using certificates located under \texttt{edge\_computing/aws\_certs/}. Do not commit real keys or certificates to the repository.

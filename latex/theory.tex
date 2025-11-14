@@ -10,11 +10,9 @@ A typical Edge architecture is structured into three functional layers: de Devic
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/Theory2.jpg}
-  \caption{Edge Computing Architecture.}
+  \caption{Edge Computing Architecture. Source: Wallarm}
   \label{fig:theory-architecture}
 \end{figure}
-
-\subsubsection{Layered responsibilities: device, edge and cloud}
 
 At the Device layer, sensors and controllers in phones, vehicles, or industrial equipment generate continuous data flows. These devices are small, energy-constrained, and often mobile, yet they form the foundation of the system. In industrial contexts, where specialized input/output interfaces are designed for monitoring and controlling industrial equipment, these often include Programmable Logic Controllers (PLCs)\footnote{\bibentry{pratexo-edge-vs-plc}.} coordinated by Supervisory Control Data Acquisition (SCADA) networks. These components not only collect data but can also execute control actions through actuators, enabling real-time adjustments within industrial processes.\footnote{\bibentry{cseicon-edge-scada}.}
 
@@ -44,7 +42,7 @@ Edge systems combine diverse physical connectivity types to balance range, bandw
 
 \section{Layered security and operational management}
 
-Decentralization necessitates a layered security model, as Edge devices are often physically exposed and run without direct supervision. Security begins with hardware resilience, requiring devices to boot only from trusted firmware and use cryptographic validation.\footnote{\bibentry{etsi-mec-whitepaper}.}
+Decentralization necessitates a layered security model, as Edge devices are often physically exposed and run without direct supervision. Security begins with hardware resilience, requiring devices to boot only from trusted firmware and use cryptographic validation.\footnote{\bibentry{lea-2023-edge-computing}.}
 
 Operationally, the focus is on zero-trust models and end-to-end encryption (TLS/SSL) across all network links. Critical to long-term deployment is the ability to manage the device lifecycle, including continuous monitoring, remote diagnostics, and patching, all functions heavily dependent on the orchestration and containerization capabilities of the Edge Cloud layer.\footnote{\bibentry{gfg-edge-computing}; \bibentry{aws-greengrass-docs}.}
 
