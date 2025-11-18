@@ -13,30 +13,30 @@ Sending all this raw data to centralized clouds introduces three structural limi
     \item Operational fragility: Connectivity lapses, even brief ones, undermine safety-critical and time-sensitive systems.
 \end{itemize}
 
-\begin{figure}[tbp]
+The scale of device proliferation demonstrated in Figure~\ref{fig:ai-iot-growth} makes it evident that centralized processing is no longer feasible. Computation must move closer to where data is produced.
+
+\begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{figures/AI1.png}
   \caption{Projected growth of IoT-connected devices worldwide. Source: Statista.}
   \label{fig:ai-iot-growth}
 \end{figure}
 
-The scale of device proliferation demonstrated in Figure~\ref{fig:ai-iot-growth} makes it evident that centralized processing is no longer feasible. Computation must move closer to where data is produced.
-
-\section{Exponential Growth in Global Data Volumes}
-
-Global data production is expected to rise from 64~zettabytes in 2020 to nearly 400~zettabytes in 2028.\footnote{\bibentry{statista-big-data-dossier}} This escalation reflects trends such as high-resolution video, AI-driven applications, machine-generated telemetry, and automated industrial systems. The magnitude of this growth places a dual burden on conventional cloud models:
-
-\begin{itemize}
-    \item Transport becomes cost-prohibitive: Moving even a fraction of these zettabyte-scale volumes through long-haul networks dramatically increases bandwidth expenditure.
-    \item Cloud computing becomes a bottleneck: Data centers cannot scale linearly with global data growth, and centralizing all computation creates single-point stress on compute, storage, and energy resources.
-\end{itemize}
-
-\begin{figure}[tbp]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{figures/AI2.png}
   \caption{Global annual data generation (zettabytes). Source: Statista.}
   \label{fig:ai-data-growth}
 \end{figure}
+
+\section{Exponential Growth in Global Data Volumes}
+
+Global data production is expected to rise from 64~zettabytes in 2020 to nearly 400~zettabytes in 2028\footnote{\bibentry{statista-big-data-dossier}}, as shown in Figure~\ref{fig:ai-data-growth}. This escalation reflects trends such as high-resolution video, AI-driven applications, machine-generated telemetry, and automated industrial systems. The magnitude of this growth places a dual burden on conventional cloud models:
+
+\begin{itemize}
+    \item Transport becomes cost-prohibitive: Moving even a fraction of these zettabyte-scale volumes through long-haul networks dramatically increases bandwidth expenditure.
+    \item Cloud computing becomes a bottleneck: Data centers cannot scale linearly with global data growth, and centralizing all computation creates single-point stress on compute, storage, and energy resources.
+\end{itemize}
 
 In essence, the world is generating more data than centralized infrastructure was ever designed to handle. Filtering, analyzing, and reacting to this data at the edge becomes not optional, but unavoidable.
 

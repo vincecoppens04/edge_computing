@@ -5,9 +5,9 @@ Beyond pure performance, Edge systems are fundamental to ensuring service relian
 
 \subsection{The three-layer model: From device to cloud}
 
-A typical Edge architecture is structured into three functional layers: de Device layer, the Edge layer and the Cloud layer. This hierarchy ensures that computing power and responsibilities are optimally distributed across the network continuum (Figure~\ref{fig:theory-architecture}).\footnote{\bibentry{gfg-edge-computing}; see also \bibentry{wallarm-edge-architecture}.} Figure source\footnote{\bibentry{wallarm-edge-architecture}}.
+A typical edge architecture is structured into three functional layers: de Device layer, the Edge layer and the Cloud layer. This hierarchy ensures that computing power and responsibilities are optimally distributed across the network continuum (Figure~\ref{fig:theory-architecture})\footnote{\bibentry{gfg-edge-computing}; see also \bibentry{wallarm-edge-architecture}.}.\footnote{\bibentry{wallarm-edge-architecture}}
 
-\begin{figure}[tbp]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=0.8\textwidth]{figures/Theory2.jpg}
   \caption{Edge Computing Architecture. Source: Wallarm}
@@ -34,7 +34,7 @@ Effective communication within the Edge continuum requires protocols tailored fo
 
 At the application layer, Message Queuing Telemetry Transport (MQTT) is the defining protocol for data exchange across edge environments. Unlike synchronous request–response models such as HTTP, MQTT operates on a lightweight publish–subscribe mechanism coordinated by a central broker. This design decouples data producers and consumers, minimizing communication overhead and enabling efficient, event-driven data flow among thousands of constrained devices. Within the OSI model, MQTT functions mainly at the application layer (Layer~7) and typically runs over TCP/IP (Layer~4), which guarantees reliable message delivery.
 
-MQTT’s adjustable Quality of Service (QoS) levels ensure reliability under varying network conditions, while its minimal header size makes it ideal for low-bandwidth or intermittently connected environments—precisely the conditions common at the edge.\footnote{\bibentry{hivemq-mqtt-qos}.} In industrial contexts, MQTT is often integrated with established field protocols such as Modbus (simple request–response communication between PLCs and sensors). In this paper’s experimental setup, MQTT forms the communication backbone across all three layers.
+MQTT’s adjustable Quality of Service (QoS) levels ensure reliability under varying network conditions, while its minimal header size makes it ideal for low-bandwidth or intermittently connected environments—precisely the conditions common at the edge.\footnote{\bibentry{hivemq-mqtt-qos}; \bibentry{oasis-mqtt-311}.} In industrial contexts, MQTT is often integrated with established field protocols such as Modbus (simple request–response communication between PLCs and sensors).\footnote{\bibentry{emqx-modbus-mqtt}.} In this paper’s experimental setup, MQTT forms the communication backbone across all three layers.
 
 \subsection{Network topologies and connectivity}
 
