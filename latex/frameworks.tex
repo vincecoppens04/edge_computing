@@ -1,0 +1,38 @@
+The rapid expansion of the Edge AI market demands multiple architectural strategies, as no single model can meet all industrial and commercial requirements. According to Grand View Research, the fastest-growing and most influential frameworks are AWS IoT Greengrass, Intel’s OpenVINO/Accelerators, and Aether.\footnote{\bibentry{grandview-edge-ai-market}.} These represent three dominant paradigms in Edge AI development: the Cloud-Down model extending centralized intelligence to local devices, the Hardware-Centric model enabling low-latency computation directly at the edge, and the Decentralized Compute model distributing processing power across global peer networks. Together, they capture the technological and strategic spectrum shaping the next phase of Edge AI infrastructure.
+
+\section{AWS IoT Core (with AWS IoT Greengrass)}
+
+The AWS IoT Core ecosystem embodies the definitive “Cloud-Down” architectural approach to Edge Computing. This model prioritizes the seamless extension of a mature, centralized cloud environment to the distributed fleet of remote edge devices, rather than championing full local autonomy.
+
+AWS IoT Core operates primarily from the cloud as the secure, scalable management plane and message broker. It acts as the central hub that establishes reliable, bidirectional communication between millions of IoT devices and the AWS Cloud. Its responsibilities include authentication, authorization, and message routing, thereby ensuring a trustworthy foundation for large-scale device interaction.
+
+The critical Edge Computing capability is delivered by AWS IoT Greengrass. This is a lightweight software runtime installed directly onto local edge gateways or compute devices. Greengrass effectively transforms this local hardware into a dedicated local application platform by “mirroring” proprietary AWS cloud features at the edge.\footnote{\bibentry{aws-iot-greengrass-docs}.}
+
+This “Cloud-Down” operating model guarantees uniform security, consistent governance, and centralized configuration across the entire device fleet. It is the preferred choice for Enterprise IoT and commercial facility management applications where seamless integration with established cloud analytics and optimized, central fleet efficiency are paramount. This allows organizations to leverage cloud intelligence while benefiting from the speed and latency advantages inherent in localized edge processing.\footnote{\bibentry{trek10-aws-greengrass-blog}.}
+
+\section{Intel}
+
+Intel, a leading force in the Edge AI ecosystem, adopts a Compute-Centric architectural strategy that contrasts with the network-oriented approaches of other platforms. Rather than emphasizing connectivity or orchestration layers, Intel’s focus lies in optimizing AI computation and inference directly at the edge, uniting hardware acceleration with scalable software frameworks.\footnote{\bibentry{intel-edge-ai-overview}.}
+
+Intel’s Edge AI framework is built around a cohesive stack of technologies: its Xeon processors and AI-optimized chips provide the computational backbone for real-time analytics, while the OpenVINO toolkit enables seamless deployment of AI models across CPUs, GPUs, VPUs, and FPGAs.\footnote{\bibentry{intel-openvino-docs}.} This multi-architecture flexibility allows developers to maximize performance-per-watt without sacrificing interoperability. Complementing this is Intel’s FPGA-based edge hardware, which offers reconfigurable acceleration for time-sensitive workloads in domains such as autonomous driving, healthcare imaging, and industrial automation.\footnote{\bibentry{edge-fpga-survey}.}
+
+Intel’s Compute-Centric model positions AI processing power as the central enabler of edge intelligence. By embedding AI capability into the compute layer itself, the system ensures that decision-making occurs as close as possible to the data source—crucial for real-time applications requiring millisecond responsiveness.\footnote{\bibentry{deloitte-edge-ai-2024}.}
+
+However, this model also faces structural challenges. Intel must contend with NVIDIA’s dominance in GPU-based AI and Apple’s migration to proprietary silicon, both of which redefine competitive standards in edge computing efficiency. Sustaining its leadership depends on continuous innovation in AI accelerator design, software-hardware co-optimization, and strategic acquisitions that reinforce its Edge AI ecosystem.
+
+\section{Aether (Open Networking Foundation -- ONF)}
+
+Aether, an open-source initiative managed by the Open Networking Foundation (ONF), fundamentally diverges from the other models by adopting a Network-Centric architectural strategy. Aether's primary focus is not device management or application orchestration but the deployment and control of private 5G/LTE wireless networks integrated with an Edge Cloud environment.\footnote{\bibentry{onf-aether}.}
+
+Aether is architected to be a complete platform, combining a mobile core (responsible for managing 4G/5G network access, subscribers, and connectivity) with a proximate Edge Cloud layer for application hosting. The system is built on modern networking paradigms, specifically Software Defined Networking (SDN) and Network Function Virtualization (NFV).\footnote{\bibentry{sdn-nfv-overview}.} This underlying infrastructure allows for unprecedented control over network resources.
+
+Aether’s Network-Centric operating model dictates that the network infrastructure itself is prioritized to meet the stringent demands of Edge AI applications. While the platform hosts applications on its Edge Cloud, the orchestration of those applications is secondary to the primary function: guaranteeing reliable, ultra-low latency wireless connectivity.\footnote{\bibentry{onf-aether-architecture}.}
+
+This specialization makes Aether indispensable for environments that cannot tolerate network performance variability. It is the essential platform for demanding use cases such as Industrial Automation (IIoT), Smart Factories, and complex logistics hubs where wireless mobility, guaranteed high reliability, and near-zero network latency—made possible by private 5G—are non-negotiable requirements for real-time control loops and precise AI model execution.\footnote{\bibentry{private5g-industrial}.}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/frameworks1.png}
+  \caption{Overview of dominant Edge Computing frameworks. Source: own production.}
+  \label{fig:frameworks-overview}
+\end{figure}
