@@ -1,6 +1,6 @@
 % Appendix C content only — no \chapter here
 
-This appendix summarises how to build the container image, load it into the local cluster, and deploy the subscriber.
+This appendix summarises how to build the container image, import it into the local k3d cluster, and deploy the subscriber.
 
 \section{Build the image locally}
 \begin{lstlisting}[language=bash,caption={Build the subscriber image}]
@@ -8,10 +8,10 @@ cd edge_computing
 docker build -t edgecloud-subscriber:latest .
 \end{lstlisting}
 
-\section{Run in a local Kubernetes cluster}
-If you use Docker Desktop, the local image is available to the cluster automatically. For a kind cluster:
-\begin{lstlisting}[language=bash,caption={Load image into a kind cluster (if used)}]
-kind load docker-image edgecloud-subscriber:latest
+\section{Run in a local k3d cluster}
+Import the locally built image into the k3d cluster:
+\begin{lstlisting}[language=bash,caption={Import image into a k3d cluster}]
+k3d image import edgecloud-subscriber:latest -c edgecloud
 \end{lstlisting}
 
 Deploy the subscriber:

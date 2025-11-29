@@ -1,4 +1,4 @@
-\documentclass[10.5pt,a4paper,oneside]{report}
+\documentclass[11pt,a4paper,oneside]{report}
 
 % =====================================================
 % ENCODING & FONT
@@ -40,6 +40,29 @@
 \usepackage{flafter}
 \usepackage{longtable}
 \usepackage{pdfpages}
+\usepackage{etoolbox}
+
+\makeatletter
+% Reduce space after ToC title
+\patchcmd{\tableofcontents}{\@starttoc}{\vspace{-1.0cm}\@starttoc}{}{}
+
+% Reduce space between chapters in ToC
+\renewcommand*\l@chapter[2]{%
+  \ifnum \c@tocdepth >\m@ne
+    \addpenalty{-\@highpenalty}%
+    \vskip 0.2em \@plus\p@ % Reduced from 1.0em
+    \setlength\@tempdima{1.5em}%
+    \begingroup
+      \parindent \z@ \rightskip \@pnumwidth
+      \parfillskip -\@pnumwidth
+      \leavevmode \bfseries
+      \advance\leftskip\@tempdima
+      \hskip -\leftskip
+      #1\nobreak\hfil \nobreak\hb@xt@\@pnumwidth{\hss #2}\par
+      \penalty\@highpenalty
+    \endgroup
+  \fi}
+\makeatother
 
 % =====================================================
 % COLOURS (for listings)
@@ -125,8 +148,9 @@
 % BIBLIOGRAPHY (BibTeX + IEEE-like)
 % =====================================================
 \usepackage{cite}
-\usepackage{url}
-\usepackage{bibentry}
+\usepackage[hyphens]{url}
+\def\UrlBreaks{\do\/\do-\do\.}
+% \usepackage{bibentry}
 
 % =====================================================
 % HYPERLINKS  (load AFTER cite/url)
@@ -170,25 +194,28 @@
 % FRONT MATTER (roman numbering, normal layout)
 % -----------------------------------------------------
 \pagenumbering{roman}
+\begingroup
+\let\clearpage\relax
+\vspace*{-4cm}
+\setcounter{tocdepth}{1}
+\begin{spacing}{0.9}
 \tableofcontents
-\listoffigures
-
+\end{spacing}
+\endgroup
+\clearpage
 % -----------------------------------------------------
 % PRELOAD BIBLIOGRAPHY ENTRIES FOR \bibentry
 % -----------------------------------------------------
 \bibliographystyle{ieeetr}
-\nobibliography{bibliodatabase}
+% \nobibliography{bibliodatabase}
 
-% -----------------------------------------------------
-% MAIN CHAPTERS (arabic numbering, compact headings)
-% -----------------------------------------------------
 % -----------------------------------------------------
 % MAIN CHAPTERS (arabic numbering, compact headings)
 % -----------------------------------------------------
 \pagenumbering{arabic}
 
 % Pull the very first chapter up (tune value if needed)
-\vspace*{-4cm}
+% \vspace*{-4cm}
 \mainchapter{Introduction}
 \input{intro}
 
@@ -220,6 +247,10 @@
 % APPENDICES (normal \chapter layout, can start on new pages)
 % -----------------------------------------------------
 \appendix
+
+\chapter{Statista figures}
+\label{app:ai_figures}
+\input{appendix_ai_figures}
 
 \chapter{Python subscriber and publisher}
 \label{app:python}
