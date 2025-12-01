@@ -1,48 +1,40 @@
+The shift toward Edge AI is not merely a technological trend; it is a direct response to structural pressures that traditional cloud-centric architectures can no longer absorb. Two global developments underline this transformation more clearly than anything else: the exponential growth of connected IoT devices and the unprecedented rise in global data generation. Together, these forces create a computational environment in which centralized cloud processing becomes too slow, too expensive, and ultimately incapable of scaling. The following two figures illustrate why a new architectural model, Edge Cloud, is becoming essential.\cite{statista-big-data-dossier}
 
-The shift toward Edge AI is not merely a technological trend, it is a direct response to structural pressures that traditional cloud-centric architectures can no longer absorb. Two global developments underline this transformation more clearly than anything else: the exponential growth of connected IoT devices and the unprecedented rise in global data generation. Together, these forces create a computational environment in which centralized cloud processing becomes too slow, too expensive, and ultimately incapable of scaling. The following two figures illustrate why a new architectural model, Edge Cloud, is becoming essential.
+What makes this shift especially decisive today is that AI is no longer confined to distant data centres. Modern applications increasingly rely on machine-learning models for perception, prediction, and automation, and these models must operate where data is produced and decisions are needed. Edge infrastructures therefore enable AI under strict latency, privacy, and reliability constraints, while the increasing weight of AI workloads, particularly deep learning inference, pushes edge systems to evolve into full Edge Clouds rather than remain thin data-forwarding layers.
 
 \section{Explosion of IoT Devices Requiring Real-Time Processing}
 
-The number of IoT-connected devices is projected to increase from 13.8 billion in 2022 to more than 40 billion by 2034~\cite{statista-big-data-dossier}. This growth is not simply quantitative; it fundamentally changes where computation must happen. IoT devices generate continuous streams of sensor data, often linked to mission-critical applications such as industrial automation, smart grids, medical monitoring, and autonomous systems.
+The number of IoT-connected devices is projected to increase from 13.8~billion in 2022 to more than 40~billion by 2034. This growth is not simply quantitative; it fundamentally changes where computation must happen. IoT devices generate continuous streams of sensor data, often linked to mission-critical applications such as industrial automation, smart grids, medical monitoring, and autonomous systems. Increasingly, those streams are valuable only insofar as they can be interpreted immediately by AI models, for example to detect anomalies, optimise control loops, recognise objects, or predict failures in real time.
 
-Sending all this raw data to centralized clouds introduces three structural limitations:
+Sending all this raw data to centralised clouds introduces three structural limitations:
 
 \begin{itemize}
-    \item Latency: Real-time applications cannot tolerate the round-trip delay to distant data centers.
-    \item Backbone saturation: Billions of devices simultaneously pushing high-frequency data exceed the physical and economic limits of transport networks.
-    \item Operational fragility: Connectivity lapses, even brief ones, undermine safety-critical and time-sensitive systems.
+    \item \textbf{Latency}: Real-time applications cannot tolerate the round-trip delay to distant data centres.
+    \item \textbf{Backbone saturation}: Billions of devices simultaneously pushing high-frequency data exceed the physical and economic limits of transport networks.
+    \item \textbf{Operational fragility}: Connectivity lapses, even brief ones, undermine safety-critical and time-sensitive systems.
 \end{itemize}
 
-The scale of device proliferation (see Appendix~\ref{app:ai_figures}, Figure~\ref{fig:ai-iot-growth}) makes it evident that centralized processing is no longer feasible. Computation must move closer to where data is produced.
-
-
-
-
+The scale of device proliferation demonstrated in Figure~\ref{fig:ai-iot-growth} makes it evident that centralised processing is no longer feasible. Computation must move closer to where data is produced.
 
 \section{Exponential Growth in Global Data Volumes}
 
-Global data production is expected to rise from 64~zettabytes in 2020 to nearly 400~zettabytes in 2028~\cite{statista-big-data-dossier}, as shown in Appendix~\ref{app:ai_figures} (Figure~\ref{fig:ai-data-growth}). This escalation reflects trends such as high-resolution video, AI-driven applications, machine-generated telemetry, and automated industrial systems. The magnitude of this growth places a dual burden on conventional cloud models:
+Global data production is expected to rise from roughly 64~zettabytes in 2020 to several hundred zettabytes within this decade. This escalation reflects trends such as high-resolution video, AI-driven applications, machine-generated telemetry, and automated industrial systems. The magnitude of this growth places a dual burden on conventional cloud models.
 
 \begin{itemize}
-    \item Transport becomes cost-prohibitive: Moving even a fraction of these zettabyte-scale volumes through long-haul networks dramatically increases bandwidth expenditure.
-    \item Cloud computing becomes a bottleneck: Data centers cannot scale linearly with global data growth, and centralizing all computation creates single-point stress on compute, storage, and energy resources.
+    \item Transport becomes cost-prohibitive because moving even a fraction of these zettabyte-scale volumes through long-haul networks dramatically increases bandwidth expenditure.
+    \item Cloud computing becomes a bottleneck: data centres cannot scale linearly with global data growth, and centralising all computation creates single-point stress on compute, storage, and energy resources.
 \end{itemize}
 
-In essence, the world is generating more data than centralized infrastructure was ever designed to handle. Filtering, analyzing, and reacting to this data at the edge becomes not optional, but unavoidable.
+AI intensifies this dynamic in two directions. On one side, it requires richer and faster data streams to deliver accurate, real-time predictions. On the other, it produces additional data through continuous outputs, embeddings, metadata, and decision logs, multiplying what must be stored and processed.
+
+In essence, the world is generating more data than centralised infrastructure was ever designed to handle. Filtering, analysing, and reacting to this data at the edge becomes not optional, but unavoidable, especially if AI systems are to remain responsive and affordable.
 
 \section{Why These Trends Create the Need for Edge Cloud}
 
 The combination of rapidly expanding IoT ecosystems and massive global data generation leads to one clear architectural conclusion: intelligence must be distributed. Edge Cloud integrates three essential components — local compute, AI inference, and cloud coordination — into a unified architecture that directly addresses the limitations highlighted above.
 
-Edge Cloud provides:
+In practice, this means that AI models can run close to devices to eliminate latency and improve reliability, while also reducing data at the source so that only high-value signals or summaries are sent onward. The edge layer provides scalable distributed compute aligned with the geographic spread of devices, and the cloud layer remains vital for orchestration, global visibility, model updates, and security. Rather than replacing the cloud, the Edge Cloud reshapes it into a coordinating backbone for a planet-scale, AI-enabled edge.
 
-\begin{itemize}
-    \item Local AI inference to eliminate latency and improve reliability.
-    \item Data reduction at the source to avoid unnecessary transport and storage.
-    \item Scalable distributed compute aligned with the geographic spread of devices.
-    \item Cloud-based orchestration for global visibility, updates, and security.
-\end{itemize}
-
-The growth of the Edge AI market — from \$20.8~billion in 2024 to \$66.5~billion by 2030 — reflects not investor sentiment, but a systemic shift driven by these technological constraints~\cite{grandview-edge-ai-market}. 
+The growth of the Edge AI market, from about \$20.8~billion in 2024 to roughly \$66.5~billion by 2030, reflects not investor sentiment, but a systemic shift driven by these technological constraints.
 
 By examining only these two graphs — IoT device growth and global data volume expansion — the necessity of Edge Cloud becomes unambiguous. Traditional cloud architectures cannot meet the demands of a world where billions of devices continuously generate massive volumes of latency-sensitive data. Edge AI emerges as the architectural response: a distributed, scalable, and performance-driven model that brings computation to the data rather than the data to the computation.
