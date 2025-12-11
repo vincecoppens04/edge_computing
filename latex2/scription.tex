@@ -1,0 +1,231 @@
+\documentclass[11pt,a4paper,oneside]{report}
+
+% =====================================================
+% ENCODING & FONT
+% =====================================================
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\frenchspacing
+
+% Allow including newer PDFs cleanly
+\pdfminorversion=7
+
+% =====================================================
+% LANGUAGE
+% =====================================================
+\usepackage[british]{babel}
+
+% =====================================================
+% PAGE LAYOUT
+% =====================================================
+\usepackage[a4paper,left=20mm,right=20mm,top=25mm,bottom=25mm,includefoot]{geometry}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 1pt minus 1pt}
+\raggedbottom
+
+% =====================================================
+% LINE SPACING
+% =====================================================
+\usepackage{setspace}
+\setstretch{1.18}
+
+% =====================================================
+% GRAPHICS & FLOATS
+% =====================================================
+\usepackage{graphicx}
+\graphicspath{{figuren/}{figures/}{../figuren/}{../figures/}}
+\usepackage{float}
+\usepackage{flafter}
+\usepackage{longtable}
+\usepackage{pdfpages}
+\usepackage{etoolbox}
+
+\makeatletter
+% Reduce space after ToC title
+\patchcmd{\tableofcontents}{\@starttoc}{\vspace{-1.0cm}\@starttoc}{}{}
+
+% Reduce space between chapters in ToC
+\renewcommand*\l@chapter[2]{%
+  \ifnum \c@tocdepth >\m@ne
+    \addpenalty{-\@highpenalty}%
+    \vskip 0.2em \@plus\p@ % Reduced from 1.0em
+    \setlength\@tempdima{1.5em}%
+    \begingroup
+      \parindent \z@ \rightskip \@pnumwidth
+      \parfillskip -\@pnumwidth
+      \leavevmode \bfseries
+      \advance\leftskip\@tempdima
+      \hskip -\leftskip
+      #1\nobreak\hfil \nobreak\hb@xt@\@pnumwidth{\hss #2}\par
+      \penalty\@highpenalty
+    \endgroup
+  \fi}
+\makeatother
+
+% =====================================================
+% COLOURS (for listings)
+% =====================================================
+\usepackage{xcolor}
+
+% =====================================================
+% CAPTIONS
+% =====================================================
+\usepackage[font=small,labelfont=bf]{caption}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{2pt}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}
+
+% =====================================================
+% LISTINGS (UTF-8 safe + wrapping)
+% =====================================================
+\usepackage{listings}
+\usepackage{listingsutf8}
+\lstset{inputencoding=utf8}
+\lstset{
+  literate=
+    {é}{{\'e}}1
+    {–}{{--}}1
+    {—}{{---}}1
+    {→}{{$\rightarrow$}}1
+    {°}{{$^\circ$}}1
+    {…}{{\ldots}}1
+    {’}{{'}}1
+    {‘}{{`}}1
+    {“}{{``}}1
+    {”}{{''}}1
+    {€}{{\euro}}1
+    {⚠️}{{[WARN]}}1
+    {✅}{{[OK]}}1
+}
+\lstdefinestyle{tightplain}{%
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  numbers=left,
+  numbersep=6pt,
+  frame=single,
+  aboveskip=6pt, belowskip=6pt,
+  breaklines=true,
+  breakatwhitespace=true,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space}
+}
+\lstset{style=tightplain}
+
+\lstdefinelanguage{YAML}{%
+  keywords={true,false,null,y,n},
+  keywordstyle=\ttfamily,
+  basicstyle=\ttfamily\small,
+  sensitive=false,
+  comment=[l]{\#},
+  morecomment=[l]{\#},
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstdefinelanguage{Dockerfile}{%
+  keywords={FROM,AS,RUN,CMD,ENV,ARG,ADD,COPY,ENTRYPOINT,EXPOSE,USER,WORKDIR,ONBUILD,STOPSIGNAL,HEALTHCHECK,SHELL,LABEL,VOLUME},
+  keywordstyle=\ttfamily,
+  comment=[l]{\#},
+  morecomment=[l]{\#},
+  morestring=[b]",
+  morestring=[b]',
+  basicstyle=\ttfamily\small
+}
+
+\renewcommand\lstlistingname{Listing}
+\renewcommand\lstlistlistingname{List of Listings}
+
+% =====================================================
+% SYMBOLS
+% =====================================================
+\usepackage{textcomp}
+
+% =====================================================
+% BIBLIOGRAPHY (BibTeX + IEEE-like)
+% =====================================================
+\usepackage{cite}
+\usepackage[hyphens]{url}
+\def\UrlBreaks{\do\/\do-\do\.}
+% \usepackage{bibentry}
+
+% =====================================================
+% HYPERLINKS  (load AFTER cite/url)
+% =====================================================
+\usepackage[hidelinks]{hyperref}
+
+% =====================================================
+% COMPACT MAIN-CHAPTER STYLE (only for numbered content)
+% =====================================================
+\makeatletter
+\newcommand{\mainchapter}[1]{%
+  \par\vspace*{10pt}% small space from top of page / previous text
+  \refstepcounter{chapter}%
+  \setcounter{section}{0}% reset section numbering like \chapter does
+  \addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#1}%
+  {\parindent \z@ \raggedright \normalfont
+    \LARGE\bfseries \thechapter. #1\par\nobreak
+    \vskip 8pt}%
+}
+\renewcommand\footnotesize{\scriptsize}
+\makeatother
+
+% =====================================================
+% MACROS
+% =====================================================
+\newcommand{\npar}{\par \vspace{1.2ex plus 0.3ex minus 0.3ex}\noindent}
+\newcommand{\command}[1]{\lstinline[basicstyle=\ttfamily]{#1}}
+
+% =====================================================
+% DOCUMENT START
+% =====================================================
+\begin{document}
+
+% -----------------------------------------------------
+% TITLE PAGE
+% -----------------------------------------------------
+\input{title}
+\thispagestyle{empty}
+
+% Front matter and TOC removed for simplified version
+\clearpage
+\pagenumbering{arabic}
+\pagestyle{plain}
+% -----------------------------------------------------
+% PRELOAD BIBLIOGRAPHY ENTRIES FOR \bibentry
+% -----------------------------------------------------
+\bibliographystyle{ieeetr}
+% \nobibliography{bibliodatabase}
+
+% -----------------------------------------------------
+% MAIN CHAPTERS (arabic numbering, compact headings)
+% -----------------------------------------------------
+\pagenumbering{arabic}
+
+% Pull the very first chapter up (tune value if needed)
+\vspace*{-1.5cm}
+% \mainchapter{Introduction}
+% \input{intro}
+
+\mainchapter{Kubernetes and its relevance to edge computing}
+\input{kubernetes}
+
+\mainchapter{AWS Lambda and its relevance to edge computing}
+\input{lambda}
+
+% -----------------------------------------------------
+% BIBLIOGRAPHY (normal report layout again)
+% -----------------------------------------------------
+\clearpage
+\pagenumbering{roman}
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{bibliodatabase}
+%\pagenumbering{roman}
+
+% Appendices removed for simplified version
+
+% -----------------------------------------------------
+\end{document}
